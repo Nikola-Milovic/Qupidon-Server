@@ -6,7 +6,7 @@ var passport = require('passport');
 var session = require("express-session"); // In Express 4.x, the Connect middleware is no longer included in the Express core
 
 require('./startup/routes')(app);
-// require('./startup/db')();
+require('./startup/db')();
 // require('./startup/validation')();
 
 //Passport

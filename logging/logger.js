@@ -27,9 +27,9 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // winston.add(winston.transports.File, { filename: 'logfile.log' });
-// logger.add(new winston.transports.MongoDB({
-//   db: 'mongodb://localhost/confession',
-//   level: 'info'
-// }));
+logger.add(new winston.transports.MongoDB({
+  db: 'mongodb://localhost/qupidon',
+  level: 'info'
+}));
 
 module.exports = logger 
