@@ -7,13 +7,12 @@ module.exports = function (passport) {
     passport.use(new FacebookTokenStrategy({
         clientID: config.facebookAuth.clientID,
         clientSecret: config.facebookAuth.clientSecret,
-        fbGraphVersion: 'v8.0'
+        fbGraphVersion: 'v8.0',
+        profileFields: ['id', 'displayName', 'gender', 'photos', 'emails']
     }, async function (accessToken, refreshToken, profile, done) {
-
         try {
             let existingUser = await userController.GetUserByID(profile.id);
             if (existingUser != null) { //user exists, just return the id
-                logger.info(existingUser)
                 return done(null, { id: profile.id, new: false })
             }
         } catch (e) {
@@ -21,11 +20,10 @@ module.exports = function (passport) {
             return done(e)
         }
 
-
         //User doesnt exist, create a new one
         var user = {
             'email': profile.emails[0].value,
-            'name': profile.name.givenName + ' ' + profile.name.familyName,
+            'name': profile.displayName,
             'id': profile.id
         }
 

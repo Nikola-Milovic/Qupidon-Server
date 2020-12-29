@@ -2,7 +2,7 @@ const Joi = require('joi');
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-    userID: {
+    user_id: {
         type: String,
         required: true
     },
@@ -17,6 +17,16 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 5,
         maxlength: 255,
+    }, bio: {
+        type: String,
+        minlength: 10,
+        maxlength: 140
+    }, gender: {
+        type: String,
+        enum: ['male', 'female', 'other']
+    }, location_id: {
+        type: mongoose.Types.ObjectId,
+        ref: 'locations'
     }
 });
 
