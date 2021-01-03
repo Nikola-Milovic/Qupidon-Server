@@ -7,9 +7,12 @@ const userController = require('../controllers/user.controller')
 //TODO add verification of the bio and the other parameters
 // Respond 200 if success or other if failure
 router.post('/profile',
-    function (req, res) {
-       userController.NewUserProfileUpdate(req)
-     
+    async function (req, res) {
+        if (userController.NewUserProfileUpdate(req)) {
+            res.sendStatus(404)
+            return
+        }
+
         //logger.info("latitude : " + req.body.location.latitude + " " + " longitude : " + req.body.location.longitude)
         //  let loc = geo.toLatLon({ latitude: req.body.location.latitude, longitude: req.body.location.longitude })
         //  let loc2 = geo.toLatLon({ latitude: 44.761792, longitude: 20.411646 })

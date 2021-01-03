@@ -23,16 +23,18 @@ async function CreateNewUser(profile) {
 }
 
 async function NewUserProfileUpdate(req) {
-    //CreateNewUser({ name: "Nikolina Erceg", id: 4259098510786444, email: "nerceg@gmail.com" })
+    const location_id = await LocationController.AddUserLocation(req.body.location, req.query.id);
 
-    let locId = await LocationController.AddUserLocation(req.body.location.longitude
-        , req.body.location.latitude, req.query.id)
+    logger.info("Then " + location_id);
 
-    const res = await UserModel.User.updateOne({ user_id: req.query.id }, {
-        gender: req.body.gender, name: req.body.name, bio: req.body.bio,
-        location_id: locId
-    })
+    await UserModel.User.updateOne({ user_id: req.query.id }, {
+        gender: req.body.gender,
+        name: req.body.name,
+        bio: req.body.bio,
+        location_id,
+    });
 }
+
 
 exports.GetUserByID = GetUserByID
 exports.CreateNewUser = CreateNewUser
