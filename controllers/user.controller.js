@@ -35,7 +35,6 @@ async function NewUserProfileUpdate(req) {
             bio: req.body.bio,
             location_id,
         }, function (err, res) {
-            console.log(res)
             if (res.nModified == 0) return false //Todo delete the previous location
         });
         return true

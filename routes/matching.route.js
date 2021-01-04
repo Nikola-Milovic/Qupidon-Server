@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/user.controller')
-const locationController = require('../controllers/location.controller')
+const MatchController = require('../controllers/match.controller')
 
 router.get('/matches',
     async function (req, res) {
-        await locationController.GetUsersCloseToLocation(req.query.id, 300000);
+        await MatchController.GetMatches(req.query.id)
         res.sendStatus(200);
     }
 );
