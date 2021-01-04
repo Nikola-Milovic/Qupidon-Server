@@ -8,14 +8,12 @@ async function AddUserLocation({ longitude, latitude }, user_id) {
 
     const loc = await LocationModel.create({ user_id, location });
 
-    logger.info("Created + " + loc._id);
-
     return loc._id;
 }
 
 async function GetUsersCloseToLocation(userID, distance) {
     let location = await LocationModel.findOne({ user_id: userID }).exec()
-    let distToRadius = distance / 6378100 // distance/ earths equator is radians
+    let distToRadius = (distance*1000) / 6378100 // distance/ earths equator is radians
     let result = await LocationModel.find().where('location').within({
         center: [location.location.coordinates[0], location.location.coordinates[1]],
         radius: distToRadius, unique: true, spherical: true

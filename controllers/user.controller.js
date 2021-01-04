@@ -2,10 +2,11 @@ const { Mongoose, mongo } = require('mongoose');
 const logger = require('../logging/logger');
 const UserModel = require('../models/user.model')
 const LocationController = require('./location.controller')
+const PreferenceController = require('../controllers/preference.controller')
 
 //GetUserByID return the user if it exists or null if the user doesnt exist
 async function GetUserByID(id) {
-    let user = await UserModel.User.findOne({ userID: id }).exec();
+    let user = await UserModel.User.findOne({ user_id: id }).exec();
     return user;
 }
 
@@ -23,16 +24,25 @@ async function CreateNewUser(profile) {
 }
 
 async function NewUserProfileUpdate(req) {
-    const location_id = await LocationController.AddUserLocation(req.body.location, req.query.id);
+    try {
+        const location_id = await LocationController.AddUserLocation(req.body.location, req.query.id);
 
-    logger.info("Then " + location_id);
+        await PreferenceController.AddUserPreferences(req.query.id, req.body.preferences)
 
-    await UserModel.User.updateOne({ user_id: req.query.id }, {
-        gender: req.body.gender,
-        name: req.body.name,
-        bio: req.body.bio,
-        location_id,
-    });
+        await UserModel.User.updateOne({ user_id: req.query.id }, {
+            gender: req.body.gender,
+            name: req.body.name,
+            bio: req.body.bio,
+            location_id,
+        }, function (err, res) {
+            console.log(res)
+            if (res.nModified == 0) return false //Todo delete the previous location
+        });
+        return true
+    } catch (e) {
+        logger.error(e)
+        return false
+    }
 }
 
 

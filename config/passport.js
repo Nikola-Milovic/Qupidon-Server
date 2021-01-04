@@ -33,7 +33,6 @@ module.exports = function (passport) {
             logger.error(e)
             return done(e)
         }
-
         return done(null, { id: profile.id, new: true }); // the user object we just made gets passed to the route's controller as `req.user`
 
     }
