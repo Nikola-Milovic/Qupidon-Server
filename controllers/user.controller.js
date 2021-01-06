@@ -44,7 +44,23 @@ async function NewUserProfileUpdate(req) {
     }
 }
 
+async function UpdateUserProfileImage(userID, link) {
+    try {
+        await UserModel.User.updateOne({ user_id: userID }, {
+            profile_picture: link,
+        }, function (err, res) {
+            if (res.nModified == 0) return false //Todo delete the previous location
+        });
+        return true
+    } catch (e) {
+        logger.error(e)
+        return false
+    }
+}
+
+
 
 exports.GetUserByID = GetUserByID
 exports.CreateNewUser = CreateNewUser
 exports.NewUserProfileUpdate = NewUserProfileUpdate
+exports.UpdateUserProfileImage = UpdateUserProfileImage

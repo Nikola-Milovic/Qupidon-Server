@@ -27,6 +27,8 @@ const userSchema = new mongoose.Schema({
     }, location_id: {
         type: mongoose.Types.ObjectId,
         ref: 'locations'
+    }, profile_picture: {
+        type: String
     }
 });
 

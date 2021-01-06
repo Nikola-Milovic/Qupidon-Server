@@ -1,43 +1,49 @@
-const multer = require('multer')
-const path = require('path');
-const crypto = require('crypto');
-const express = require('express');
-const router = express.Router();
 const logger = require('../logging/logger');
+const config = require('../config/config')
+
+const aws = require('aws-sdk');
 
 // Include the node file module
-// const fs = require('fs');
+const fs = require('fs');
 
-// const storage = multer.diskStorage({
-//     destination: '../uploads/',
-//     filename: function (req, file, cb) {
-//         return crypto.pseudoRandomBytes(16, function (err, raw) {
-//             if (err) {
-//                 return cb(err);
-//             }
-//             return cb(null, "" + (raw.toString('hex')) + (path.extname(file.originalname)));
-//         });
-//     }
-// });
+async function UploadImage(file) {
+    aws.config.update({
+        accessKeyId: config['aws-config-images'].accessKeyId,
+        secretAccessKey: config['aws-config-images'].secretAccessKey,
+        region: config['aws-config-images'].region
+    });
 
-// router.post(
-//     "/upload",
-//     multer({
-//         storage: storage
-//     }).single('upload'), function (req, res) {
-//         console.log(req.file);
-//         console.log(req.body);
-//         console.log(req.file.filename);
-//         return res.status(200).end();
-//     });
+    const fileExtension = (file.originalname.match(/\.+[\S]+$/) || [])[0];
+    const filename = `${file.fieldname}__${Date.now()}${fileExtension}`
 
-// app.get('/uploads/:upload', function (req, res) {
-//     file = req.params.upload;
-//     console.log(req.params.upload);
-//     var img = fs.readFileSync(__dirname + "/uploads/" + file);
-//     res.writeHead(200, { 'Content-Type': 'image/png' });
-//     res.end(img, 'binary');
 
-// });
+    // Read content from the file
+    const fileContent = fs.createReadStream(file.path)
 
-module.exports = router;
+    const s3 = new aws.S3();
+
+    // Setting up S3 upload parameters
+    const params = {
+        ACL: 'public-read',
+        Bucket: "qupidon-images",
+        Key: filename, // File name you want to save as in S3
+        Body: fileContent,
+    };
+
+    //Uploading files to the bucket
+    const result = await s3.upload(params, function (err, data) {
+        if (err) {
+            throw err
+        }
+        console.log(`File uploaded successfully. ${data.Location}`);
+        if (data) {
+            fs.unlinkSync(path); // Empty temp folder
+        }
+    }).promise()
+
+    console.log(result)
+
+    return result.Location
+};
+
+module.exports.UploadImage = UploadImage
