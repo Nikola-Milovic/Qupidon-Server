@@ -1,6 +1,7 @@
 const { Mongoose, mongo } = require('mongoose');
 const logger = require('../logging/logger');
 const UserModel = require('../models/user.model')
+const InteractionsModel = require('../models/interactions.model')
 const LocationController = require('./location.controller')
 const PreferenceController = require('../controllers/preference.controller')
 
@@ -19,8 +20,17 @@ async function CreateNewUser(profile) {
             return err
         }
         logger.info("Successfuly saved")
-        return null
+
     });
+
+    await InteractionsModel.create({ user_id: profile.id }, function (err, _) {
+        if (err) {
+            logger.error(err)
+            return err
+        }
+    })
+
+    return null
 }
 
 async function NewUserProfileUpdate(req) {

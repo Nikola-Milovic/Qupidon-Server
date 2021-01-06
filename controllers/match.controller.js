@@ -17,19 +17,22 @@ async function GetMatches(id) {
 
     var potentionalMatches = []
 
-    for (const entry of usersInRange) {
+    for (const entry of usersInRange) { //TODO limit to some number
         if (id == entry.user_id) {
             continue
         }
         const user = await UserController.GetUserByID(entry.user_id)
+        if (user == null) {
+            console.log(entry.user_id)
+        }
         if (checkIfMatch(pref, user)) {
-            potentionalMatches.push(user.name)
+            potentionalMatches.push(user)
         } else {
             console.log("Not a match " + user.name)
         }
     }
 
-    console.log(potentionalMatches)
+    return potentionalMatches
 }
 
 function checkIfMatch(pref, profile) {

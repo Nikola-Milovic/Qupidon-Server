@@ -22,10 +22,6 @@ var upload = multer({ storage: storage });
 router.post(
     "/upload",
     upload.single('profile_pic'), async function (req, res) {
-        // console.log("Image")
-        // console.log(req.file.path);
-        // console.log(req.body.user_id)
-
         try {
             const imageLink = await imageController.UploadImage(req.file)
             console.log("Image link is " + imageLink)
@@ -37,14 +33,5 @@ router.post(
 
         return res.sendStatus(200)
     });
-
-// app.get('/uploads/:upload', function (req, res) {
-//     file = req.params.upload;
-//     console.log(req.params.upload);
-//     var img = fs.readFileSync(__dirname + "/uploads/" + file);
-//     res.writeHead(200, { 'Content-Type': 'image/png' });
-//     res.end(img, 'binary');
-
-// });
 
 module.exports = router;
