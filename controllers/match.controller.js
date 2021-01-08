@@ -7,12 +7,10 @@ const UserController = require('../controllers/user.controller')
 //Potentional matches
 
 async function GetMatches(id) {
-    console.log("GetMatches")
     const pref = await PreferenceController.FindUserPreferences(id)
     if (pref == null) {
 
     }
-
     const usersInRange = await LocationController.GetUsersCloseToLocation(id, pref.distance)
 
     var potentionalMatches = []
@@ -27,8 +25,6 @@ async function GetMatches(id) {
         }
         if (checkIfMatch(pref, user)) {
             potentionalMatches.push(user)
-        } else {
-            console.log("Not a match " + user.name)
         }
     }
 
