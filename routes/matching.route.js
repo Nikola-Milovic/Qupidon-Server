@@ -26,6 +26,7 @@ router.post('/like',
         console.log(req.body)
         await InteractionsController.LikeUser(req.query.id, req.body.like_id)
         res.sendStatus(200);
+        MatchController.CheckForMatch(req.body.like_id, req.query.id)
     }
 );
 
