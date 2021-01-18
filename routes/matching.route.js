@@ -11,10 +11,13 @@ router.get('/profiles',
         var profiles = []
         for (const user of matches) {
             profiles.push({
-                user_id: user.user_id, profile_pic: user.profile_picture,
+                user_id: user.user_id, profile_pic: `${user.profile_picture}_medium.png`,
                 name: user.name, bio: user.bio
             })
         }
+
+        console.log("PROFILES")
+        console.log(profiles)
 
         res.send(profiles);
     }
@@ -24,7 +27,17 @@ router.get('/matches',
     async function (req, res) {
         const matches = await InteractionsController.GetMatches(req.query.id)
 
-        res.send({ "matches": matches }).status(200);
+        console.log("Matches")
+        console.log(matches)
+        res.send(matches).status(200);
+    }
+);
+
+router.get('/matches/profile',
+    async function (req, res) {
+        const user = await UserController.GetUserByID(req.query.id)
+
+        res.send({ "profile_pic": `${user.profile_picture}_small.png`, "name": user.name }).status(200);
     }
 );
 
