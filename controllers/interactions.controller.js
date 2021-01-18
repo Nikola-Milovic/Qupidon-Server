@@ -39,8 +39,27 @@ async function GetInteractionsByID(id) {
     return interactions
 }
 
+async function AddMatch(id, id2) {
+    InteractionsModel.updateOne({ user_id: id }, {
+        $push: { matches: id2 }
+    }, function (err, res) {
+    });
+    InteractionsModel.updateOne({ user_id: id2 }, {
+        $push: { matches: id }
+    }, function (err, res) {
+    });
+}
+
+async function GetMatches(id) {
+    const interactions = await GetInteractionsByID(id)
+
+    return interactions.matches
+}
+
 
 exports.LikeUser = LikeUser
 exports.RejectUser = RejectUser
 exports.checkIfAlreadyInteracted = checkIfAlreadyInteracted
 exports.GetInteractionsByID = GetInteractionsByID
+exports.AddMatch = AddMatch
+exports.GetMatches = GetMatches

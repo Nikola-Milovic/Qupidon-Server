@@ -6,24 +6,15 @@ const logger = require('../logging/logger');
 const UserController = require('../controllers/user.controller')
 const imageController = require('../controllers/image.controller')
 
-const storage = multer.diskStorage({
-    destination(req, file, cb) {
-        cb(null, "./uploads/");
-    },
-    filename(req, file = {}, cb) {
-        const { originalname } = file;
-        const fileExtension = (originalname.match(/\.+[\S]+$/) || [])[0];
-        cb(null, `${file.fieldname}__${Date.now()}${fileExtension}`);
-    },
-});
-
+var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
 
 router.post(
-    "/upload",
+    "/ppic",
     upload.single('profile_pic'), async function (req, res) {
+        console.log(req.file.buffer)
         try {
-            const imageLink = await imageController.UploadImage(req.file)
+            const imageLink = await imageController.UploadProfileImage(req.file)
             console.log("Image link is " + imageLink)
             const updateResult = await UserController.UpdateUserProfileImage(req.body.user_id, imageLink)
         } catch (e) {

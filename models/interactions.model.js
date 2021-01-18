@@ -10,9 +10,14 @@ var InteractionsSchema = new Schema({
         type: [String],
         default: []
     },
+    matches: {
+        type: [String],
+        default: []
+    },
     user_id: {
         type: String,
-        required: true
+        required: true,
+        unique : true
     }
 });
 

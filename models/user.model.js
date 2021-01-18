@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
     user_id: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     email: {
         type: String,

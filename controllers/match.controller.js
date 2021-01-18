@@ -7,7 +7,7 @@ const InteractionsController = require('../controllers/interactions.controller')
 
 //Potentional matches
 
-async function GetMatches(id) {
+async function GetProfiles(id) {
     const pref = await PreferenceController.FindUserPreferences(id)
     if (pref == null) {
 
@@ -37,10 +37,9 @@ async function GetMatches(id) {
 async function CheckForMatch(who_id, contains_id) {
     let interaction = await InteractionsController.GetInteractionsByID(who_id)
     if (interaction.liked.includes(contains_id)) {
-        console.log("Match")
-        return
+        return true
     }
-    return
+    return false
 }
 
 //Checks whether or not two users are compatible
@@ -51,5 +50,5 @@ function checkIfMatch(pref, profile) {
     return false
 }
 
-exports.GetMatches = GetMatches
+exports.GetProfiles = GetProfiles
 exports.CheckForMatch = CheckForMatch

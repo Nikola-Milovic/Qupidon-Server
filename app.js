@@ -1,3 +1,4 @@
+'use strict';
 const logger = require('./logging/logger')
 const express = require('express');
 const app = express();
@@ -29,8 +30,4 @@ app.use(passport.initialize());
 // persistent login sessions
 //app.use(passport.session());
 
-
-
-//Start server
-const port = process.env.PORT || 3000;
-app.listen(port, () => logger.info(`Listening on port ${port}...`));
+module.exports = app;
