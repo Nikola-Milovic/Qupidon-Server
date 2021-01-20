@@ -14,4 +14,11 @@ router.post('/profile',
     }
 );
 
+router.get('/profile',
+    async function (req, res) {
+        let profile = await userController.GetUserByID(req.query.id)
+        res.send(profile).status(200);
+    }
+);
+
 module.exports = router; 
